@@ -10,10 +10,10 @@ class SoilDatasetFinetune(Dataset):
         self.samples = []
 
         self.group_to_moisture = {
-            '0_10': 5.0,
-            '10_20': 15.0,
-            '20_30': 25.0,
-            '30_40': 35.0
+            '0_10': 5.0/35.0,
+            '10_20': 15.0/35.0,
+            '20_30': 25.0/35.0,
+            '30_40': 35.0/35.0
         }
 
         for depth_folder in os.listdir(root_dir):

@@ -14,11 +14,11 @@ from callbacks.online_finetuner import OnlineFineTuner
 # ==== Config ==== #
 DATA_ROOT_SSL = "/content/data_soid_image"
 DATA_ROOT_FINE = "/content/data_folder"
-BATCH_SIZE = 32
-NUM_WORKERS = 0
+BATCH_SIZE = 256
+NUM_WORKERS = 64
 MAX_EPOCHS = 200
-Z_DIM = 64
-ENCODER_OUT_DIM = 1024  #
+Z_DIM = 512
+ENCODER_OUT_DIM = 576  #
 LEARNING_RATE = 1e-4
 WARMUP_EPOCHS = 10
 
@@ -26,14 +26,14 @@ WARMUP_EPOCHS = 10
 
 # ==== Transforms ==== #
 train_transform = BarlowTwinsTrainTransform(
-    input_height=256,
+    input_height=224,
     gaussian_blur=False,
     jitter_strength=0.5,
     normalize=normalization()
 )
 
 val_transform = BarlowTwinsValTransform(
-    input_height=256,
+    input_height=224,
     normalize=normalization()
 )
 
@@ -56,6 +56,20 @@ finetune_loader = DataLoader(
     shuffle=False,
     num_workers=NUM_WORKERS,
     drop_last=True
+)
+
+class SoilDataModule(pl.LightningDataModule):
+    def __init__(self, ssl_loader, finetune_loader):
+        super().__init__()
+        self.ssl_loader = ssl_loader
+        self.finetune_loader = finetune_loader
+
+    def train_dataloader(self):
+        return [self.ssl_loader, self.finetune_loader]
+
+data_module = SoilDataModule(
+    ssl_loader,
+    finetune_loader
 )
 
 # ==== Model ==== #
@@ -86,4 +100,4 @@ trainer = pl.Trainer(
 )
 
 # ==== Train ==== #
-trainer.fit(model, ssl_loader, finetune_loader)
+trainer.fit(model, datamodule=data_module)

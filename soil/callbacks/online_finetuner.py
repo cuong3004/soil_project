@@ -33,7 +33,7 @@ class OnlineFineTuner(Callback):
 
     def on_fit_start(self, trainer: pl.Trainer, pl_module: pl.LightningModule) -> None:
         # add linear_eval layer and optimizer
-        pl_module.online_finetuner = nn.Linear(self.encoder_output_dim, self.num_classes).to(pl_module.device)
+        pl_module.online_finetuner = nn.Linear(self.encoder_output_dim, 1).to(pl_module.device)
         self.optimizer = torch.optim.Adam(pl_module.online_finetuner.parameters(), lr=1e-4)
 
     def extract_online_finetuning_view(
@@ -60,12 +60,18 @@ class OnlineFineTuner(Callback):
 
         feats = feats.detach()
         preds = pl_module.online_finetuner(feats)
-        loss = F.cross_entropy(preds, y)
+        # print(preds, y)
+        # print(preds.shape, y.shape)
+        loss = F.mse_loss(preds.squeeze(), y)
 
         loss.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
 
-        acc = accuracy(F.softmax(preds, dim=1), y, task="multiclass", num_classes=10)
-        pl_module.log("online_train_acc", acc, on_step=True, on_epoch=False)
-        pl_module.log("online_train_loss", loss, on_step=True, on_epoch=False)
+        rmse = torch.sqrt(loss)
+        pl_module.log("online_train_rmse", rmse, on_step=False, on_epoch=True)
+
+        # pl_module.log("online_train_loss", loss, on_step=True, on_epoch=False)
+        # acc = accuracy(F.softmax(preds, dim=1), y, task="multiclass", num_classes=10)
+        # pl_module.log("online_train_acc", acc, on_step=True, on_epoch=False)
+        # pl_module.log("online_train_loss", loss, on_step=True, on_epoch=False)
