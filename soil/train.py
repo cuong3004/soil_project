@@ -14,11 +14,11 @@ from callbacks.online_finetuner import OnlineFineTuner
 # ==== Config ==== #
 DATA_ROOT_SSL = "/content/data_soid_image"
 DATA_ROOT_FINE = "/content/data_folder"
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 NUM_WORKERS = 4
 MAX_EPOCHS = 200
 Z_DIM = 512
-ENCODER_OUT_DIM = 640  # Với MobileNetV3 Small
+ENCODER_OUT_DIM = 1024  #
 LEARNING_RATE = 1e-4
 WARMUP_EPOCHS = 10
 
