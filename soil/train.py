@@ -14,10 +14,10 @@ from callbacks.online_finetuner import OnlineFineTuner
 # ==== Config ==== #
 DATA_ROOT_SSL = "/content/data_soid_image"
 DATA_ROOT_FINE = "/content/data_folder"
-BATCH_SIZE = 64
-NUM_WORKERS = 4
+BATCH_SIZE = 32
+NUM_WORKERS = 0
 MAX_EPOCHS = 200
-Z_DIM = 512
+Z_DIM = 64
 ENCODER_OUT_DIM = 1024  #
 LEARNING_RATE = 1e-4
 WARMUP_EPOCHS = 10
