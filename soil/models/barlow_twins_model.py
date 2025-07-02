@@ -3,6 +3,7 @@ import torch.nn as nn
 import pytorch_lightning as pl
 from losses.barlow_loss import BarlowTwinsLoss
 from models.projection_head import ProjectionHead
+from functools import partial
 
 def fn(warmup_steps, step):
     if step < warmup_steps:

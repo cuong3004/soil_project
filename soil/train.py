@@ -12,31 +12,34 @@ from models.barlow_twins_model import BarlowTwins
 from callbacks.online_finetuner import OnlineFineTuner
 
 # ==== Config ==== #
-DATA_ROOT = "/data/data_folder"
+DATA_ROOT_SSL = "/content/data_soid_image"
+DATA_ROOT_FINE = "/content/data_folder"
 BATCH_SIZE = 32
 NUM_WORKERS = 4
 MAX_EPOCHS = 200
-Z_DIM = 128
-ENCODER_OUT_DIM = 576  # Với MobileNetV3 Small
+Z_DIM = 512
+ENCODER_OUT_DIM = 640  # Với MobileNetV3 Small
 LEARNING_RATE = 1e-4
 WARMUP_EPOCHS = 10
 
+
+
 # ==== Transforms ==== #
 train_transform = BarlowTwinsTrainTransform(
-    input_height=128,
+    input_height=256,
     gaussian_blur=False,
     jitter_strength=0.5,
     normalize=normalization()
 )
 
 val_transform = BarlowTwinsValTransform(
-    input_height=128,
+    input_height=256,
     normalize=normalization()
 )
 
 # ==== Datasets ==== #
-ssl_dataset = SoilDatasetSSL(root_dir=DATA_ROOT, transform=train_transform)
-finetune_dataset = SoilDatasetFinetune(root_dir=DATA_ROOT, transform=val_transform)
+ssl_dataset = SoilDatasetSSL(root_dir=DATA_ROOT_SSL, transform=train_transform)
+finetune_dataset = SoilDatasetFinetune(root_dir=DATA_ROOT_FINE, transform=val_transform)
 
 # ==== DataLoaders ==== #
 ssl_loader = DataLoader(

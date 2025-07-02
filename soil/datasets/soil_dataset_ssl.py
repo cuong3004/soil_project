@@ -10,19 +10,21 @@ class SoilDatasetSSL(Dataset):
         self.transform = transform
         self.samples = []
 
-        for depth_folder in os.listdir(root_dir):
-            depth_path = os.path.join(root_dir, depth_folder)
-            if os.path.isdir(depth_path):
-                for type_folder in os.listdir(depth_path):
-                    type_path = os.path.join(depth_path, type_folder)
-                    if os.path.isdir(type_path):
-                        for class_folder in os.listdir(type_path):
-                            class_path = os.path.join(type_path, class_folder)
-                            if os.path.isdir(class_path):
-                                for img_file in os.listdir(class_path):
-                                    if img_file.endswith(".jpg") or img_file.endswith(".JPG"):
-                                        img_path = os.path.join(class_path, img_file)
-                                        self.samples.append(img_path)
+        for img_file in os.listdir(root_dir):
+            if img_file.endswith(".jpg") or img_file.endswith(".JPG"):
+                img_path = os.path.join(root_dir, img_file)
+                self.samples.append(img_path)
+                                        
+            # depth_path = os.path.join(root_dir, depth_folder)
+            # if os.path.isdir(depth_path):
+            #     for type_folder in os.listdir(depth_path):
+            #         type_path = os.path.join(depth_path, type_folder)
+            #         if os.path.isdir(type_path):
+            #             for class_folder in os.listdir(type_path):
+            #                 class_path = os.path.join(type_path, class_folder)
+            #                 if os.path.isdir(class_path):
+            #                     for img_file in os.listdir(class_path):
+                                    
 
     def __len__(self):
         return len(self.samples)
