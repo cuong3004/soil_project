@@ -12,7 +12,7 @@ from models.barlow_twins_model import BarlowTwins
 from callbacks.online_finetuner import OnlineFineTuner
 
 # ==== Config ==== #
-DATA_ROOT = "./data/data_folder"
+DATA_ROOT = "/data/data_folder"
 BATCH_SIZE = 32
 NUM_WORKERS = 4
 MAX_EPOCHS = 200
