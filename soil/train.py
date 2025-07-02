@@ -14,7 +14,7 @@ from callbacks.online_finetuner import OnlineFineTuner
 # ==== Config ==== #
 DATA_ROOT_SSL = "/content/data_soid_image"
 DATA_ROOT_FINE = "/content/data_folder"
-BATCH_SIZE = 32
+BATCH_SIZE = 128
 NUM_WORKERS = 4
 MAX_EPOCHS = 200
 Z_DIM = 512
