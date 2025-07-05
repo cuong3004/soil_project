@@ -14,11 +14,11 @@ from callbacks.online_finetuner import OnlineFineTuner
 # ==== Config ==== #
 DATA_ROOT_SSL = "/content/data_soid_image"
 DATA_ROOT_FINE = "/content/data_folder"
-BATCH_SIZE = 32 #256
-NUM_WORKERS = 2 #64
+BATCH_SIZE = 256 # 32 #
+NUM_WORKERS = 64 # 2 #
 MAX_EPOCHS = 200
-Z_DIM = 64 #512
-ENCODER_OUT_DIM = 576  #
+Z_DIM = 1024 #  64 #
+ENCODER_OUT_DIM = 256  #
 LEARNING_RATE = 1e-4
 WARMUP_EPOCHS = 10
 
@@ -97,6 +97,7 @@ trainer = pl.Trainer(
     accelerator="auto",
     devices=1,
     callbacks=[online_finetuner, checkpoint_callback],
+    default_root_dir="/content/drive/MyDrive/2025/Soil",
 )
 
 # ==== Train ==== #
