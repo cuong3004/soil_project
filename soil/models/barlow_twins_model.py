@@ -56,30 +56,32 @@ class BarlowTwins(pl.LightningModule):
         return loss
 
     # ---- Finetune Regression Step (dataloader_idx=1) ---- #
-    def finetune_step(self, batch):
-        x, y = batch
-        feats = self.encoder(x).detach()  # Freeze encoder, không backprop qua encoder
-        preds = self.finetune_head(feats).squeeze()
+    # def finetune_step(self, batch):
+    #     x, y = batch
+    #     feats = self.encoder(x).detach()  # Freeze encoder, không backprop qua encoder
+    #     preds = self.finetune_head(feats).squeeze()
 
-        y = y.float().to(preds.device)
-        loss = F.mse_loss(preds, y)
+    #     y = y.float().to(preds.device)
+    #     loss = F.mse_loss(preds, y)
 
-        rmse = torch.sqrt(loss)
-        self.log("finetune_mse", loss, on_step=True, on_epoch=False, prog_bar=True)
-        self.log("finetune_rmse", rmse, on_step=True, on_epoch=False, prog_bar=True)
-        return loss
+    #     rmse = torch.sqrt(loss)
+    #     self.log("finetune_mse", loss, on_step=True, on_epoch=False, prog_bar=True)
+    #     self.log("finetune_rmse", rmse, on_step=True, on_epoch=False, prog_bar=True)
+    #     return loss
 
     def training_step(self, batch, batch_idx):
-        if batch_idx % 2 == 0:
-            return self.ssl_step(batch[0])
-        else:
-            return self.finetune_step(batch[1])
+        return self.ssl_step(batch)
+        # if batch_idx % 2 == 0:
+            # return self.ssl_step(batch[0])
+        # else:
+            # return self.finetune_step(batch[1])
             
         # loss = self.shared_step(batch)
         # self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
         # return loss
 
-    # def validation_step(self, batch, batch_idx):
+    def validation_step(self, batch, batch_idx):
+        return 
     #     loss = self.shared_step(batch)
     #     self.log("val_loss", loss, on_step=False, on_epoch=True)
 

@@ -59,18 +59,23 @@ class OnlineFineTuner(Callback):
             feats = pl_module(x)
 
         feats = feats.detach()
-        preds = pl_module.online_finetuner(feats)
-        # print(preds, y)
-        # print(preds.shape, y.shape)
-        loss = F.mse_loss(preds.squeeze(), y)
+        with torch.enable_grad():
+            preds = pl_module.online_finetuner(feats)
+            # print(preds, y)
+            # print(preds.shape, y.shape)
+            loss = F.mse_loss(preds.squeeze(), y)
 
         loss.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
 
         rmse = torch.sqrt(loss)
-        pl_module.log("online_train_rmse", rmse, on_step=False, on_epoch=True)
-
+        # pl_module.log("online_train_rmse", rmse, on_step=False, on_epoch=True)
+        # rmse = torch.sqrt(loss)
+        self.log("finetune_mse", loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("finetune_rmse", rmse, on_step=False, on_epoch=True, prog_bar=True)
+        # pl_module.log("online_train_loss", loss, on_step=True, on_epoch=False)
+        # acc = accurac
         # pl_module.log("online_train_loss", loss, on_step=True, on_epoch=False)
         # acc = accuracy(F.softmax(preds, dim=1), y, task="multiclass", num_classes=10)
         # pl_module.log("online_train_acc", acc, on_step=True, on_epoch=False)

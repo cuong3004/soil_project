@@ -101,4 +101,6 @@ trainer = pl.Trainer(
 )
 
 # ==== Train ==== #
-trainer.fit(model, datamodule=data_module)
+trainer.fit(model, ssl_loader, finetune_loader,
+            # datamodule=data_module
+            )
